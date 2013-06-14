@@ -1,0 +1,6 @@
+-buildpath: osgi.core,\
+	osgi.cmpn,\
+	org.apache.felix.dependencymanager,\
+	webshop.products.api;version=latest,\
+	org.amdatu.search.api
+-sub: *.bnd
