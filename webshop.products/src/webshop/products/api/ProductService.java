@@ -7,4 +7,5 @@ public interface ProductService {
     List<String> listCategories();
     Product getProductById(String id);
 	void saveProduct(Product product);
+	void removeProduct(String id);
 }

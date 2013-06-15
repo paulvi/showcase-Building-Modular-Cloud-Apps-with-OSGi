@@ -81,4 +81,10 @@ public class MongoProductService implements ProductService {
 		String savedId = products.save(product).getSavedId();
 		product.set_id(savedId);
 	}
+
+	@Override
+	public void removeProduct(String id) {
+		JacksonDBCollection<Product, String> products = JacksonDBCollection.wrap(productCollection, Product.class, String.class);
+		products.removeById(id);
+	}
 }

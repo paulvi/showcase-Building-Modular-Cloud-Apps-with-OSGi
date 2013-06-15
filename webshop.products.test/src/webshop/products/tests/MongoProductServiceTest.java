@@ -1,4 +1,4 @@
-package org.example.tests;
+package webshop.products.tests;
 
 import java.util.List;
 import java.util.Properties;
@@ -54,5 +54,63 @@ public class MongoProductServiceTest extends BaseOSGiServiceTest<ProductService>
     	
     	List<Product> games = instance.listProductsInCategory("games");
     	assertEquals(1, games.size());
+    }
+    
+    public void testSaveProduct() {
+    	//Check that there are no books yet
+    	List<Product> books = instance.listProductsInCategory("books");
+    	assertTrue(books.isEmpty());
+    	
+    	Product p1 = new Product();
+    	p1.setName("p1");
+    	p1.setCategory("books");
+    	
+    	Product p2 = new Product();
+    	p2.setName("p2");
+    	p2.setCategory("books");
+    	
+    	instance.saveProduct(p1);
+    	instance.saveProduct(p2);
+    	
+    	books = instance.listProductsInCategory("books");
+    	assertEquals(2, books.size());
+    }
+    
+    public void testUpdateProduct() {
+    	List<Product> books = instance.listProductsInCategory("books");
+    	assertTrue(books.isEmpty());
+    	
+    	Product p1 = new Product();
+    	p1.setName("p1");
+    	p1.setCategory("books");
+    	    	   	
+    	instance.saveProduct(p1);
+    	Product dbBook = instance.getProductById(p1.get_id());
+    	assertEquals("p1", dbBook.getName());
+    	
+    	dbBook.setName("updated");
+    	
+    	instance.saveProduct(dbBook);
+    	dbBook = instance.getProductById(p1.get_id());
+    	assertEquals("updated", dbBook.getName());
+    	
+    }
+    
+    public void testeRemoveProduct() {
+    	Product p1 = new Product();
+    	p1.setName("p1");
+    	p1.setCategory("books");
+    	    	   	
+    	Product p2 = new Product();
+    	p2.setName("p2");
+    	p2.setCategory("books");
+    	
+    	instance.saveProduct(p1);
+    	instance.saveProduct(p2);    	
+    	
+    	assertEquals(2, instance.listProductsInCategory("books").size());
+    	
+    	instance.removeProduct(p2.get_id());
+    	assertEquals(1, instance.listProductsInCategory("books").size());    	
     }
 }
