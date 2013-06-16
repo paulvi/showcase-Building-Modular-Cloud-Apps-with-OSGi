@@ -1,13 +1,16 @@
 package webshop.products.mongo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.vz.mongodb.jackson.DBCursor;
 import net.vz.mongodb.jackson.JacksonDBCollection;
 
 import org.amdatu.mongo.MongoDBService;
-import org.osgi.service.log.LogService;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
 import webshop.products.api.Product;
 import webshop.products.api.ProductNotFoundException;
@@ -20,9 +23,9 @@ import com.mongodb.DBObject;
 
 public class MongoProductService implements ProductService {
 	private static final String COLLECTION_NAME = "products";
-	private volatile LogService log;
 	private volatile MongoDBService mongoDBService;
 	private volatile DBCollection productCollection;
+	private volatile EventAdmin eventAdmin;
 	
 	/**
 	 * DBCollection is thread safe, we can re-use the same instance.
@@ -80,6 +83,11 @@ public class MongoProductService implements ProductService {
 		JacksonDBCollection<Product, String> products = JacksonDBCollection.wrap(productCollection, Product.class, String.class);
 		String savedId = products.save(product).getSavedId();
 		product.set_id(savedId);
+		
+		//Post an event to EventAdmin
+		Map<String, Object> properties = new HashMap<>();
+    	properties.put("product", product);
+    	eventAdmin.postEvent(new Event("products/updated", properties));
 	}
 
 	@Override

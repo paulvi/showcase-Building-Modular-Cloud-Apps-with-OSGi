@@ -3,7 +3,9 @@
 	    <a class="brand" href="#">Modularity Showcase</a>
 	    <ul class="nav">
 	      <li><a href="#/products">Shop</a></li>	      
-		  <li ng-repeat="category in categories"><a href="">{{category.name}}</a></li>
+		  <li ng-repeat="category in categories"><a href="#/products/{{category}}">{{category}}</a></li>
+		  <li><a href="#/basket"><i class="icon-shopping-cart"></i> Checkout <span class="badge">{{basket.size()}}</span></a></li>
+		  <li><a href="#/orders"><i class="icon-tasks"></i> My orders</a></li>
 	  </ul>
 
   </div>

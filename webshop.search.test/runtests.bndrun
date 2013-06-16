@@ -25,6 +25,7 @@
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
 	org.apache.felix.metatype;version='[1.0.6,1.0.7)',\
 	org.mongodb.mongo-java-driver;version='[2.10.1,2.10.2)',\
+	osgi.cmpn;version='[4.3.1,4.3.2)',\
 	webshop.products.api;version=latest,\
 	webshop.products.mongo;version=latest,\
 	webshop.search.amdatusearch;version=latest,\

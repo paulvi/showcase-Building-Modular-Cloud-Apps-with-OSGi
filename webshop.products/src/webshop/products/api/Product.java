@@ -7,8 +7,18 @@ public class Product {
     private String _id;
 	private String name;
 	private String category;
+	private double price;
     
-    public String get_id() {
+	public Product() {
+	}
+	
+    public Product(String name, String category, double price) {
+		this.name = name;
+		this.category = category;
+		this.price = price;
+	}
+
+	public String get_id() {
     	return _id;
     }
     
@@ -32,5 +42,11 @@ public class Product {
 		this.category = category;
 	}
 
-	
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
 }

@@ -36,6 +36,16 @@ public class SolrSearch implements SearchService {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	@Override
+	public void removeFromIndex(String id) {
+		try {
+			index.deleteById(id);
+		} catch (SearchException e) {
+			logService.log(LogService.LOG_ERROR, "Error deleting indexed document with id '" + id + "'", e);
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
 	public List<Product> findProducts(String query) {

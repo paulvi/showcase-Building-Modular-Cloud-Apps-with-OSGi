@@ -65,4 +65,5 @@ public class SearchTest extends BaseOSGiServiceTest<SearchService> {
     	List<Product> findProducts = instance.findProducts("Java");
     	assertEquals(2, findProducts.size());
     }
+    
 }
