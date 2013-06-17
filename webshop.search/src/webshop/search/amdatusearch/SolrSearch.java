@@ -52,7 +52,7 @@ public class SolrSearch implements SearchService {
 		try {
 			SearchResponse select = search.select(query, 0, 10, null);
 			List<Product> products = new ArrayList<>();
-			
+			System.out.println(query);
 			for (Document document : select.getResults()) {
 				Collection<Object> fieldValues = document.getFieldValues("uri");
 				Iterator<Object> idIterator = fieldValues.iterator();

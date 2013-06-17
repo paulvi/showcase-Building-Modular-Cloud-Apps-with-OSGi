@@ -26,12 +26,13 @@ public class MongoProductService implements ProductService {
 	private volatile MongoDBService mongoDBService;
 	private volatile DBCollection productCollection;
 	private volatile EventAdmin eventAdmin;
-	
+
 	/**
 	 * DBCollection is thread safe, we can re-use the same instance.
 	 */
 	public void start() {
-		productCollection = mongoDBService.getDB().getCollection(COLLECTION_NAME);
+		productCollection = mongoDBService.getDB().getCollection(
+				COLLECTION_NAME);
 	}
 
 	public void stop() {
@@ -40,39 +41,44 @@ public class MongoProductService implements ProductService {
 
 	@Override
 	public List<Product> listProductsInCategory(String category) {
-        JacksonDBCollection<Product, String> products = JacksonDBCollection.wrap(productCollection, Product.class, String.class);
-        
-        List<Product> result = new ArrayList<>();
-        DBCursor<Product> cursor = products.find(new BasicDBObject("category", category));
-        
-        while(cursor.hasNext()) {
-        	result.add(cursor.next());
-        }
-        	
-        return result;
+		JacksonDBCollection<Product, String> products = JacksonDBCollection
+				.wrap(productCollection, Product.class, String.class);
+
+		List<Product> result = new ArrayList<>();
+		DBCursor<Product> cursor = products.find(new BasicDBObject("category",
+				category));
+
+		while (cursor.hasNext()) {
+			result.add(cursor.next());
+		}
+
+		return result;
 	}
 
 	/**
-	 * Categories are not stored in a separate collection, but are collected from the product.category field using a group function.
+	 * Categories are not stored in a separate collection, but are collected
+	 * from the product.category field using a group function.
 	 */
 	@Override
 	public List<String> listCategories() {
-        BasicDBObject group = new BasicDBObject("$group", new BasicDBObject("_id", "$category"));
-        AggregationOutput aggregate = productCollection.aggregate(group);
-        List<String> categories = new ArrayList<>();
-        
-        for(DBObject resultObject : aggregate.results()) {
-            categories.add((String)resultObject.get("_id"));
-        }
-		
+		BasicDBObject group = new BasicDBObject("$group", new BasicDBObject(
+				"_id", "$category"));
+		AggregationOutput aggregate = productCollection.aggregate(group);
+		List<String> categories = new ArrayList<>();
+
+		for (DBObject resultObject : aggregate.results()) {
+			categories.add((String) resultObject.get("_id"));
+		}
+
 		return categories;
 	}
 
 	@Override
 	public Product getProductById(String id) {
-		JacksonDBCollection<Product, String> products = JacksonDBCollection.wrap(productCollection, Product.class, String.class);
+		JacksonDBCollection<Product, String> products = JacksonDBCollection
+				.wrap(productCollection, Product.class, String.class);
 		Product findOneById = products.findOneById(id);
-		if(findOneById == null) {
+		if (findOneById == null) {
 			throw new ProductNotFoundException(id);
 		}
 		return findOneById;
@@ -80,19 +86,36 @@ public class MongoProductService implements ProductService {
 
 	@Override
 	public void saveProduct(Product product) {
-		JacksonDBCollection<Product, String> products = JacksonDBCollection.wrap(productCollection, Product.class, String.class);
+		JacksonDBCollection<Product, String> products = JacksonDBCollection
+				.wrap(productCollection, Product.class, String.class);
 		String savedId = products.save(product).getSavedId();
 		product.set_id(savedId);
-		
-		//Post an event to EventAdmin
+
+		// Post an event to EventAdmin
 		Map<String, Object> properties = new HashMap<>();
-    	properties.put("product", product);
-    	eventAdmin.postEvent(new Event("products/updated", properties));
+		properties.put("product", product);
+		eventAdmin.postEvent(new Event("products/updated", properties));
 	}
 
 	@Override
 	public void removeProduct(String id) {
-		JacksonDBCollection<Product, String> products = JacksonDBCollection.wrap(productCollection, Product.class, String.class);
+		JacksonDBCollection<Product, String> products = JacksonDBCollection
+				.wrap(productCollection, Product.class, String.class);
 		products.removeById(id);
+	}
+
+	@Override
+	public List<Product> listProducts() {
+		JacksonDBCollection<Product, String> products = JacksonDBCollection
+				.wrap(productCollection, Product.class, String.class);
+
+		List<Product> result = new ArrayList<>();
+		DBCursor<Product> cursor = products.find();
+
+		while (cursor.hasNext()) {
+			result.add(cursor.next());
+		}
+
+		return result;
 	}
 }

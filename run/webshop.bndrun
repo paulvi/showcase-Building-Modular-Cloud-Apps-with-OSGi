@@ -14,6 +14,8 @@
 	org.amdatu.mongo;version='[1.0.4,1.0.5)',\
 	org.amdatu.scheduling.api;version='[1.0.0,1.0.1)',\
 	org.amdatu.scheduling.quartz;version='[1.0.1,1.0.2)',\
+	org.amdatu.search.api;version='[1.0.0,1.0.1)',\
+	org.amdatu.search.solr.impl;version='[1.0.1,1.0.2)',\
 	org.amdatu.security.tokenprovider.api;version='[1.0.0,1.0.1)',\
 	org.amdatu.security.tokenprovider.impl;version='[1.0.0,1.0.1)',\
 	org.amdatu.security.tokenstorage.mongo;version='[1.0.1,1.0.2)',\
@@ -54,6 +56,11 @@
 	webshop.products.api;version=latest,\
 	webshop.products.mongo;version=latest,\
 	webshop.products.rest;version=latest,\
+	webshop.search.amdatusearch;version=latest,\
+	webshop.search.api;version=latest,\
+	webshop.search.events;version=latest,\
+	webshop.search.rest;version=latest,\
+	webshop.search.scheduledindexer;version=latest,\
 	webshop.testdata;version=latest
 
 -runrequires: osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
@@ -82,4 +89,10 @@
 	osgi.identity;filter:='(osgi.identity=webshop.admin.login.configadminprovider)',\
 	osgi.identity;filter:='(osgi.identity=webshop.admin.login.rest)',\
 	osgi.identity;filter:='(osgi.identity=webshop.admin.products.ui)',\
-	osgi.identity;filter:='(osgi.identity=webshop.frontend.filters)'
+	osgi.identity;filter:='(osgi.identity=webshop.frontend.filters)',\
+	osgi.identity;filter:='(osgi.identity=webshop.search.amdatusearch)',\
+	osgi.identity;filter:='(osgi.identity=webshop.search.events)',\
+	osgi.identity;filter:='(osgi.identity=webshop.search.rest)',\
+	osgi.identity;filter:='(osgi.identity=org.amdatu.search.solr.impl)',\
+	osgi.identity;filter:='(osgi.identity=webshop.search.scheduledindexer)',\
+	osgi.identity;filter:='(osgi.identity=org.amdatu.scheduling.quartz)'

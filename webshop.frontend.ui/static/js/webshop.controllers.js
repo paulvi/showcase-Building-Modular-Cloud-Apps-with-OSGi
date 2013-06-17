@@ -10,6 +10,14 @@ var ProductsCtrl = ['$scope', '$http', '$routeParams', 'basket', function($scope
 	}
 
 	$scope.basket = basket;
+
+	$scope.$watch('search', function(search) {
+		if(search != undefined && search.length > 0) {
+			$http.get('/productsearch?query=' + search).success(function(data) {
+				$scope.products = data;
+			});		
+		}
+	});
 }];
 
 var CategoriesCtrl = ['$scope', '$http', 'basket', function($scope, $http, basket) {
