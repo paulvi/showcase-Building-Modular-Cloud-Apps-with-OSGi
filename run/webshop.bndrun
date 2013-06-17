@@ -46,6 +46,7 @@
 	webshop.customers.login.rest;version=latest,\
 	webshop.customers.mongo;version=latest,\
 	webshop.customers.rest;version=latest,\
+	webshop.frontend.filters;version=latest,\
 	webshop.frontend.ui;version=latest,\
 	webshop.orders.api;version=latest,\
 	webshop.orders.mongo;version=latest,\
@@ -80,4 +81,5 @@
 	osgi.identity;filter:='(osgi.identity=webshop.admin.general.ui)',\
 	osgi.identity;filter:='(osgi.identity=webshop.admin.login.configadminprovider)',\
 	osgi.identity;filter:='(osgi.identity=webshop.admin.login.rest)',\
-	osgi.identity;filter:='(osgi.identity=webshop.admin.products.ui)'
+	osgi.identity;filter:='(osgi.identity=webshop.admin.products.ui)',\
+	osgi.identity;filter:='(osgi.identity=webshop.frontend.filters)'
