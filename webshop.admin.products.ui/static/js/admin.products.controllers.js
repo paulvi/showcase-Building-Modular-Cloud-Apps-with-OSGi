@@ -43,4 +43,10 @@ var EditProductsCtrl = ['$scope', '$http', '$routeParams', '$location', function
 			$location.path('/products');
 		});	
 	}
+
+	$scope.delete = function() {
+		$http.delete('/products/all/' + $routeParams.productId).success(function() {
+			$location.path('/products');
+		});
+	}
 }];
