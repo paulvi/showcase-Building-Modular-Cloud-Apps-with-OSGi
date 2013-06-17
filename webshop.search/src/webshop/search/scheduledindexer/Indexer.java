@@ -11,7 +11,7 @@ import webshop.products.api.ProductService;
 import webshop.search.api.SearchService;
 
 @RepeatForever
-@RepeatInterval(period=RepeatInterval.SECOND, value = 10)
+@RepeatInterval(period=RepeatInterval.MINUTE, value = 1)
 public class Indexer implements Job{
 
 	private volatile ProductService productService;
@@ -19,11 +19,8 @@ public class Indexer implements Job{
 	
 	@Override
 	public void execute(JobExecutionContext ctx) throws JobExecutionException {
-		System.out.println("indexing");
-		
 		for(Product product : productService.listProducts()) {
 			searchService.indexProduct(product);
-			System.out.println("indexed: " + product);
 		}
 	}
 

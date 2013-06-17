@@ -19,7 +19,7 @@ public class Activator extends DependencyActivatorBase {
     	
         manager.add(createComponent()
         	.setInterface(Filter.class.getName(), props)
-            .setImplementation(ExampleComponent.class)
+            .setImplementation(RedirectFilter.class)
             .add(createServiceDependency()
                 .setService(LogService.class)
                 .setRequired(false))
