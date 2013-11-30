@@ -44,6 +44,8 @@ subprojects { p ->
     aQute.bnd.build.Project bndProject
     bndProject = workspace.getProject(p.projectDir)
     
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
     sourceSets.main.java.srcDirs = ['src']
     sourceSets.main.resources.srcDirs = ['src']
     sourceSets.test.java.srcDirs = ['test']
@@ -52,6 +54,7 @@ subprojects { p ->
     sourceSets.main.output.resourcesDir = 'bin'
     sourceSets.test.output.classesDir = 'bin_test'
     sourceSets.test.output.resourcesDir = 'bin_test'
+    testResultsDirName = 'generated/test-reports'
 
     bndProject.getDependson().each {
         compileJava.dependsOn(':' +  it.name + ':bndbuild')
@@ -65,16 +68,33 @@ subprojects { p ->
 
     task bndbuild << { task ->
         bndProject.build()
+        bndProject.getWarnings().each {
+            logger.warn it
+        }
+
+        bndProject.getErrors().each {
+            logger.error it
+        }
+        
+        if(bndProject.getErrors()) {
+            throw new  GradleException("Bnd build failure. Check build logs for error messages")
+        }
     }
 
     bndbuild.dependsOn(['compileJava','processResources'])
 
     task bndtest << { task -> 
-        bndProject.test();
+        if(bndProject.getProperty("Test-Cases")) {
+            bndProject.test();
+        }
     }
 
     clean.doLast {
         p.file('generated').deleteDir()
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
 }
 
