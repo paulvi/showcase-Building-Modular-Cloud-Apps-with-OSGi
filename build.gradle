@@ -2,12 +2,14 @@ import aQute.bnd.build.Workspace
 
 defaultTasks 'clean', 'bndbuild'
 
+//Add bnd as a build dependency
 buildscript {
     dependencies {
         classpath files('cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.2.0.jar')
     }
 }
 
+//Generate settings.gradle containing all projects
 task generatesettings << {
     def f = new File('.')
     def bndProjects = []
@@ -29,6 +31,7 @@ task generatesettings << {
     }
 }
 
+//Setup the workspace
 Workspace workspace
 def parentDir = project.projectDir
     
@@ -44,6 +47,7 @@ subprojects { p ->
     aQute.bnd.build.Project bndProject
     bndProject = workspace.getProject(p.projectDir)
     
+    //Setup source and target directories
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
     sourceSets.main.java.srcDirs = ['src']
@@ -56,6 +60,7 @@ subprojects { p ->
     sourceSets.test.output.resourcesDir = 'bin_test'
     testResultsDirName = 'generated/test-reports'
 
+    //Setup project dependencies
     bndProject.getDependson().each {
         compileJava.dependsOn(':' +  it.name + ':bndbuild')
     }
@@ -64,10 +69,14 @@ subprojects { p ->
         dependencies.add('compile', files(it.getFile()))
     }
 
+    //Add junit as a default dependency
     dependencies.add('testCompile', 'junit:junit:4.+')
 
+    //Perform the actual bnd build
     task bndbuild << { task ->
         bndProject.build()
+
+        //Report errors and warnings to the Gradle output
         bndProject.getWarnings().each {
             logger.warn it
         }
@@ -76,6 +85,7 @@ subprojects { p ->
             logger.error it
         }
         
+        //Fail the build if there are build errors
         if(bndProject.getErrors()) {
             throw new  GradleException("Bnd build failure. Check build logs for error messages")
         }
@@ -83,6 +93,7 @@ subprojects { p ->
 
     bndbuild.dependsOn(['compileJava','processResources'])
 
+    //Run integration tests
     task bndtest << { task -> 
         if(bndProject.getProperty("Test-Cases")) {
             bndProject.test();
@@ -94,6 +105,15 @@ subprojects { p ->
     }
 }
 
+//Collect generated and external bundles for deployment
+task release() << {
+    delete "release"
+
+    ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.2.0.jar')
+    ant.bndrelease(allowsnapshots: true, bndfile: 'run/webshop.bndrun', rootdir: './', outputdir: 'release')   
+}
+
+//Generate a Gradle wrapper
 task wrapper(type: Wrapper) {
     gradleVersion = '1.6'
 }
