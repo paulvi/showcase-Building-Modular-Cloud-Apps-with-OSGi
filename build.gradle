@@ -20,14 +20,15 @@ task generatesettings << {
     }
 
     def settingsFile = new File('settings.gradle')
-    settingsFile.text = 'include '
+    //settingsFile.text = 'include '
 
     bndProjects.eachWithIndex { item,idx ->
+        /*
         if(idx > 0) {
             settingsFile << ', '
-        }
+        }*/
 
-        settingsFile << "'$item'"
+        settingsFile << "include '$item'\n"
     }
 }
 

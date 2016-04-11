@@ -4,3 +4,4 @@ gradle
 webshop.admin.general.ui/build
 */build
 release
+/gradle-app.setting
